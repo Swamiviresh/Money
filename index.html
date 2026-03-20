@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trackify - Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-gradient" aria-hidden="true">
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="url(#logo-grad)"/>
+            <path d="M8 14L12 18L20 10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28">
+                <stop stop-color="#6C63FF"/>
+                <stop offset="1" stop-color="#48C6EF"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="logo-text">Trackify</span>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main container">
+    <!-- Summary Cards -->
+    <section class="summary-section reveal-on-scroll" id="summarySection">
+      <div class="summary-card summary-card--balance" id="balanceCard">
+        <div class="summary-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <p class="summary-card__label">Total Balance</p>
+        <p class="summary-card__value" id="totalBalance">$0.00</p>
+      </div>
+      <div class="summary-card summary-card--income" id="incomeCard">
+        <div class="summary-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <p class="summary-card__label">Total Income</p>
+        <p class="summary-card__value" id="totalIncome">$0.00</p>
+      </div>
+      <div class="summary-card summary-card--expense" id="expenseCard">
+        <div class="summary-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        </div>
+        <p class="summary-card__label">Total Expenses</p>
+        <p class="summary-card__value" id="totalExpenses">$0.00</p>
+      </div>
+    </section>
+
+    <!-- Add Transaction Form -->
+    <section class="form-section reveal-on-scroll" id="formSection">
+      <h2 class="section-title">Add Transaction</h2>
+      <form class="transaction-form" id="transactionForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txnNote" class="form-label">Description</label>
+            <input type="text" id="txnNote" class="form-input" placeholder="e.g. Grocery shopping" maxlength="100" required autocomplete="off">
+            <span class="form-error" id="noteError"></span>
+          </div>
+          <div class="form-group">
+            <label for="txnAmount" class="form-label">Amount ($)</label>
+            <input type="number" id="txnAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01" required autocomplete="off">
+            <span class="form-error" id="amountError"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txnType" class="form-label">Type</label>
+            <select id="txnType" class="form-input form-select" required>
+              <option value="">Select type</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+            <span class="form-error" id="typeError"></span>
+          </div>
+          <div class="form-group">
+            <label for="txnCategory" class="form-label">Category</label>
+            <select id="txnCategory" class="form-input form-select" required>
+              <option value="">Select category</option>
+              <optgroup label="Income">
+                <option value="salary">Salary</option>
+                <option value="freelance">Freelance</option>
+                <option value="investment">Investment</option>
+                <option value="gift">Gift</option>
+                <option value="other-income">Other Income</option>
+              </optgroup>
+              <optgroup label="Expense">
+                <option value="food">Food & Dining</option>
+                <option value="transport">Transport</option>
+                <option value="shopping">Shopping</option>
+                <option value="bills">Bills & Utilities</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="health">Health</option>
+                <option value="education">Education</option>
+                <option value="other-expense">Other Expense</option>
+              </optgroup>
+            </select>
+            <span class="form-error" id="categoryError"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txnDate" class="form-label">Date</label>
+            <input type="date" id="txnDate" class="form-input" required>
+            <span class="form-error" id="dateError"></span>
+          </div>
+          <div class="form-group form-group--btn">
+            <button type="submit" class="btn btn-primary" id="addBtn">
+              <span class="btn-text">Add Transaction</span>
+              <span class="btn-ripple"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section reveal-on-scroll" id="chartsSection">
+      <h2 class="section-title">Insights</h2>
+      <div class="charts-grid">
+        <div class="chart-card" id="doughnutChartCard">
+          <h3 class="chart-card__title">Spending by Category</h3>
+          <div class="chart-wrapper">
+            <canvas id="categoryChart"></canvas>
+          </div>
+          <p class="chart-empty" id="doughnutEmpty">Add some transactions to see insights</p>
+        </div>
+        <div class="chart-card" id="barChartCard">
+          <h3 class="chart-card__title">Income vs Expenses</h3>
+          <div class="chart-wrapper">
+            <canvas id="overviewChart"></canvas>
+          </div>
+          <p class="chart-empty" id="barEmpty">Add some transactions to see insights</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transaction History -->
+    <section class="history-section reveal-on-scroll" id="historySection">
+      <div class="history-header">
+        <h2 class="section-title">Transaction History</h2>
+        <div class="filter-group">
+          <select id="filterCategory" class="form-input form-select filter-select" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+            <option value="salary">Salary</option>
+            <option value="freelance">Freelance</option>
+            <option value="investment">Investment</option>
+            <option value="gift">Gift</option>
+            <option value="other-income">Other Income</option>
+            <option value="food">Food & Dining</option>
+            <option value="transport">Transport</option>
+            <option value="shopping">Shopping</option>
+            <option value="bills">Bills & Utilities</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="health">Health</option>
+            <option value="education">Education</option>
+            <option value="other-expense">Other Expense</option>
+          </select>
+          <input type="date" id="filterDate" class="form-input filter-select" aria-label="Filter by date">
+        </div>
+      </div>
+      <div class="transaction-list" id="transactionList">
+        <p class="empty-state" id="emptyState">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-icon"><rect x="2" y="2" width="20" height="20" rx="5"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>No transactions yet. Add one above!</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Trackify &copy; <span id="currentYear"></span> &mdash; Your personal finance companion</p>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
